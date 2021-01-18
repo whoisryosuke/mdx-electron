@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import fs from 'fs';
 import path from 'path';
-import AceEditor from 'react-ace';
-
-// Needed for snippets, autocomplete, etc
-import 'ace-builds/src-min-noconflict/ext-language_tools';
-import 'ace-builds/src-noconflict/mode-markdown';
-import 'ace-builds/src-noconflict/theme-github';
+import { EditorState, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 interface Props {}
 
 export const CodeEditor = (props: Props) => {
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(EditorState.createEmpty());
   const filePath = path.join(__dirname, './content/test.mdx');
   const onChange = (newValue) => {
     setCode(newValue);
-    fs.writeFileSync(filePath, newValue);
+    console.log('edited text', newValue);
+    // fs.writeFileSync(filePath, newValue);
   };
 
   useEffect(() => {
     const mdxFile = fs.readFileSync(filePath, 'utf8');
-    setCode(mdxFile);
+    setCode(
+      EditorState.createWithContent(ContentState.createFromText(mdxFile))
+    );
   }, [setCode, filePath]);
   return (
-    <AceEditor
-      mode="markdown"
-      theme="github"
-      onChange={onChange}
-      name="code-editor"
-      value={code}
-      editorProps={{ $blockScrolling: true }}
-      enableBasicAutocompletion
-      enableLiveAutocompletion
+    <Editor
+      editorState={code}
+      toolbarClassName="toolbarClassName"
+      wrapperClassName="wrapperClassName"
+      editorClassName="editorClassName"
+      onEditorStateChange={onChange}
     />
   );
 };
