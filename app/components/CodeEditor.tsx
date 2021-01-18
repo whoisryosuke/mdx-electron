@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import fs from 'fs';
 import path from 'path';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
-import draftToMarkdown from 'draftjs-to-markdown';
-import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -16,14 +15,15 @@ export const CodeEditor = (props: Props) => {
     setCode(newValue);
     console.log('edited text', newValue.getCurrentContent());
     const rawContentState = convertToRaw(newValue.getCurrentContent());
-    const markup = draftToMarkdown(rawContentState);
-    console.log('saving markdown', markup);
-    fs.writeFileSync(filePath, markup);
+    const markdownChanges = draftToMarkdown(rawContentState);
+    console.log('saving markdown', markdownChanges);
+    fs.writeFileSync(filePath, markdownChanges);
   };
 
   useEffect(() => {
     const mdxFile = fs.readFileSync(filePath, 'utf8');
-    setCode(EditorState.createWithContent(stateFromMarkdown(mdxFile)));
+    const contentState = convertFromRaw(markdownToDraft(mdxFile));
+    setCode(EditorState.createWithContent(contentState));
     console.log('loading from file');
   }, []);
   return (
