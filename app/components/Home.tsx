@@ -1,42 +1,31 @@
-import React from 'react';
-import styled from 'styled-components';
-import Test from '../content/test.mdx';
+import React, { useState } from 'react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useCurrentFileName } from '../context/CurrentFileContext';
-import CodeEditor from './CodeEditor';
+import { CodeEditor } from './CodeEditor';
 import { MDXPreview } from './MDXPreview';
 import PreviewErrorBoundary from './PreviewErrorBoundary';
 import { Sidebar } from './Sidebar';
 
-const Container = styled.section`
-  display: flex;
-  flex-direction: row;
-`;
-
-const ContentArea = styled.section`
-  position: relative;
-  flex: 1;
-`;
-
-const PreviewContainer = styled.div`
-  padding: 3em;
-`;
-
 export default function Home(): React.ReactNode {
+  const [refreshKey, setRefreshKey] = useState('0');
   const filename = useCurrentFileName();
-  const timestamp = Number(new Date()).toString(36);
+  const refreshPreview = () => {
+    const timestamp = Number(new Date()).toString(36);
+    setRefreshKey(timestamp);
+  };
   return (
-    <Container>
+    <Flex>
       <Sidebar />
-      <ContentArea>
-        <CodeEditor filename={filename} />
-      </ContentArea>
-      <ContentArea>
-        <PreviewContainer>
-          <PreviewErrorBoundary key={timestamp}>
+      <Box as="section" flex={1}>
+        <CodeEditor filename={filename} refreshPreview={refreshPreview} />
+      </Box>
+      <Box as="section" flex={1}>
+        <Box p={3}>
+          <PreviewErrorBoundary key={refreshKey}>
             <MDXPreview filename={filename} />
           </PreviewErrorBoundary>
-        </PreviewContainer>
-      </ContentArea>
-    </Container>
+        </Box>
+      </Box>
+    </Flex>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import fs from 'fs';
 import path from 'path';
+import { Accordion, Box } from '@chakra-ui/react';
 import { useCurrentFile } from '../context/CurrentFileContext';
 
 interface Props {}
@@ -17,9 +18,17 @@ const SidebarItem = ({ file }) => {
       setCurrentFile((prevFile) => ({ ...prevFile, name: file.name }));
   };
   return (
-    <button type="button" onClick={handleNavigation}>
+    <Box
+      as="button"
+      type="submit"
+      px={4}
+      py={2}
+      flex="1"
+      textAlign="left"
+      onClick={handleNavigation}
+    >
       {file.name}
-    </button>
+    </Box>
   );
 };
 
@@ -43,11 +52,11 @@ export const Sidebar = (props: Props) => {
     }
   });
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <Accordion display="flex" flexDirection="column">
       {files.map((file) => (
         <SidebarItem key={file.name} file={file} />
       ))}
-    </div>
+    </Accordion>
   );
 };
 

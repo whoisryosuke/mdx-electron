@@ -5,13 +5,34 @@ import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { useCurrentFileName } from '../context/CurrentFileContext';
 
 interface Props {
   filename: string;
+  refreshPreview: () => void;
 }
 
-export const CodeEditor = React.memo(function CodeEditor({ filename }: Props) {
+const toolbarOptions = {
+  options: [
+    'inline',
+    'blockType',
+    // 'fontSize',
+    // 'fontFamily',
+    'list',
+    // 'textAlign',
+    // 'colorPicker',
+    'link',
+    'embedded',
+    'emoji',
+    'image',
+    'remove',
+    'history',
+  ],
+};
+
+export const CodeEditor = React.memo(function CodeEditor({
+  filename,
+  refreshPreview,
+}: Props) {
   const [code, setCode] = useState(EditorState.createEmpty());
   const filePath = path.join(__dirname, `./content/${filename}`);
   const loadedFile = useRef('');
@@ -22,6 +43,7 @@ export const CodeEditor = React.memo(function CodeEditor({ filename }: Props) {
     const markdownChanges = draftToMarkdown(rawContentState);
     console.log('saving markdown', markdownChanges);
     fs.writeFileSync(filePath, markdownChanges);
+    refreshPreview();
   };
 
   useEffect(() => {
@@ -48,6 +70,7 @@ export const CodeEditor = React.memo(function CodeEditor({ filename }: Props) {
       wrapperClassName="wrapperClassName"
       editorClassName="editorClassName"
       onEditorStateChange={onChange}
+      toolbar={toolbarOptions}
     />
   );
 });

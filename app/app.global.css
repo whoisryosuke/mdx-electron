@@ -9,3 +9,21 @@ body {
   height: 100vh;
   overflow-y: hidden;
 }
+.DraftEditor-root h1 {
+  font-size: 2em;
+}
+.DraftEditor-root h2 {
+  font-size: 1.5em;
+}
+.DraftEditor-root h3 {
+  font-size: 1.17em;
+}
+.DraftEditor-root h4 {
+  font-size: 1.12em;
+}
+.DraftEditor-root h5 {
+  font-size: 0.83em;
+}
+.DraftEditor-root h6 {
+  font-size: 0.75em;
+}
