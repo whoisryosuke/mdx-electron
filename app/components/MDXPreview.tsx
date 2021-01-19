@@ -4,7 +4,9 @@ import path from 'path';
 import MDX from '@mdx-js/runtime';
 import { UIComponents } from './MDXProvider';
 
-interface Props {}
+interface Props {
+  filename: string;
+}
 
 export const MDXPreview = ({ filename }: Props) => {
   if (filename && filename !== '') {
