@@ -14,12 +14,12 @@ export default function Home(): React.ReactNode {
     setRefreshKey(timestamp);
   };
   return (
-    <Flex>
+    <Flex minHeight="100vh">
       <Sidebar />
-      <Box as="section" flex={1}>
+      <Box as="section" flex={1} minHeight="100vh">
         <CodeEditor filename={filename} refreshPreview={refreshPreview} />
       </Box>
-      <Box as="section" flex={1}>
+      <Box as="section" flex={1} minHeight="100vh">
         <Box p={3}>
           <PreviewErrorBoundary key={refreshKey}>
             <MDXPreview filename={filename} />
