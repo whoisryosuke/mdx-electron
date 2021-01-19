@@ -1,9 +1,8 @@
 import React from 'react';
-import fs from 'fs';
-import path from 'path';
 import styled from 'styled-components';
 import Test from '../content/test.mdx';
 import CodeEditor from './CodeEditor';
+import PreviewErrorBoundary from './PreviewErrorBoundary';
 
 const Container = styled.section`
   display: flex;
@@ -15,16 +14,24 @@ const ContentArea = styled.section`
   flex: 1;
 `;
 
+const PreviewContainer = styled.div`
+  padding: 3em;
+`;
+
+const timestamp = Number(new Date()).toString(36);
+
 export default function Home(): React.ReactNode {
-  const filePath = path.join(__dirname, './content/test.mdx');
-  const mdxFile = fs.readFileSync(filePath, 'utf8');
   return (
     <Container>
       <ContentArea>
         <CodeEditor />
       </ContentArea>
       <ContentArea>
-        <Test />
+        <PreviewContainer>
+          <PreviewErrorBoundary key={timestamp}>
+            <Test />
+          </PreviewErrorBoundary>
+        </PreviewContainer>
       </ContentArea>
     </Container>
   );
