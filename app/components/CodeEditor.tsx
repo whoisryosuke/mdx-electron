@@ -5,6 +5,7 @@ import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { AccordionButton } from './CodeEditorButtons/AccordionButton';
 
 interface Props {
   filename: string;
@@ -61,11 +62,12 @@ export const CodeEditor = React.memo(function CodeEditor({
   return (
     <Editor
       editorState={code}
-      toolbarClassName="toolbarClassName"
-      wrapperClassName="wrapperClassName"
-      editorClassName="editorClassName"
+      toolbarClassName="MDXCodeEditor_Toolbar"
+      wrapperClassName="MDXCodeEditor_Wrapper"
+      editorClassName="MDXCodeEditor"
       onEditorStateChange={onChange}
       toolbar={toolbarOptions}
+      toolbarCustomButtons={[<AccordionButton key="accordion" />]}
     />
   );
 });
