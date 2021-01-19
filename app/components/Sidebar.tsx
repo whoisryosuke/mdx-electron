@@ -112,7 +112,7 @@ export const Sidebar = (props: Props) => {
   const files: File[] = parseFolder();
   console.log('files', files);
   return (
-    <Accordion minHeight="100vh" allowMultiple allowToggle>
+    <Accordion width="200px" minHeight="100vh" allowMultiple allowToggle>
       {files.map((file) => (
         <SidebarItem key={file.name} file={file} />
       ))}

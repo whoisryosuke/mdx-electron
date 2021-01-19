@@ -16,9 +16,16 @@ export default function Home(): React.ReactNode {
   return (
     <Flex minHeight="100vh">
       <Sidebar />
-      <Box as="section" flex={1} minHeight="100vh">
+      <Flex
+        as="section"
+        flex={1}
+        minHeight="100vh"
+        height="100vh"
+        overflowY="scroll"
+        flexDirection="column"
+      >
         <CodeEditor filename={filename} refreshPreview={refreshPreview} />
-      </Box>
+      </Flex>
       <Box as="section" flex={1} minHeight="100vh">
         <Box p={3}>
           <PreviewErrorBoundary key={refreshKey}>
