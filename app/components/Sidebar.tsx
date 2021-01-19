@@ -37,7 +37,7 @@ const SidebarItemFolder = ({ file, folder }) => {
         </Box>
         <AccordionIcon />
       </AccordionButton>
-      <AccordionPanel pb={4}>
+      <AccordionPanel pr={0} pb={4}>
         {file.children?.map(renderChildren)}
       </AccordionPanel>
     </AccordionItem>
