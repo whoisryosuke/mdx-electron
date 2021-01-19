@@ -38,18 +38,14 @@ export const CodeEditor = React.memo(function CodeEditor({
   const loadedFile = useRef('');
   const onChange = (newValue) => {
     setCode(newValue);
-    console.log('edited text', newValue.getCurrentContent());
     const rawContentState = convertToRaw(newValue.getCurrentContent());
     const markdownChanges = draftToMarkdown(rawContentState);
-    console.log('saving markdown', markdownChanges);
     fs.writeFileSync(filePath, markdownChanges);
     refreshPreview();
   };
 
   useEffect(() => {
-    console.log('re-rendering code editor');
     if (filename && filename !== '' && loadedFile.current !== filename) {
-      console.log('file isnt null', filename);
       let mdxFile;
       try {
         mdxFile = fs.readFileSync(filePath, 'utf8');
@@ -58,7 +54,6 @@ export const CodeEditor = React.memo(function CodeEditor({
       } finally {
         const contentState = convertFromRaw(markdownToDraft(mdxFile));
         setCode(EditorState.createWithContent(contentState));
-        console.log('loading from file');
         loadedFile.current = filename;
       }
     }

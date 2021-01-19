@@ -35,7 +35,6 @@ const SidebarItem = ({ file }) => {
 export const Sidebar = (props: Props) => {
   const filePath = path.join(__dirname, './content/');
   const files: File[] = fs.readdirSync(filePath, 'utf8').map((filename) => {
-    console.log('got file', filename);
     // Check if folder, recursively run this command and set as children
     const children = [];
     // if(fs.lstatSync(filename).isDirectory()) {

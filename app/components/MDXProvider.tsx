@@ -107,7 +107,6 @@ const ChakraUIComponents = {
   Code,
 };
 
-console.log('mdx components', Box);
 export const UIComponents = {
   h1: (props) => <Heading as="h1" size="2xl" {...props} />,
   h2: (props) => <Heading as="h2" size="xl" {...props} />,
