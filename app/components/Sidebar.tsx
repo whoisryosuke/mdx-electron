@@ -1,7 +1,14 @@
 import React from 'react';
 import fs from 'fs';
 import path from 'path';
-import { Accordion, Box } from '@chakra-ui/react';
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+} from '@chakra-ui/react';
 import { useCurrentFile } from '../context/CurrentFileContext';
 
 interface Props {}
@@ -9,21 +16,42 @@ interface Props {}
 type File = {
   name: string;
   children: File[] | never[];
+  type: 'file' | 'dir';
 };
 
-const SidebarItem = ({ file }) => {
-  const { setCurrentFile } = useCurrentFile();
-  const handleNavigation = () => {
-    if (setCurrentFile)
-      setCurrentFile((prevFile) => ({ ...prevFile, name: file.name }));
+const SidebarItemFolder = ({ file, folder }) => {
+  const renderChildren = (child) => {
+    return (
+      <SidebarItem
+        key={child.name}
+        file={child}
+        folder={`${folder}${file.name}/`}
+      />
+    );
   };
+  return (
+    <AccordionItem>
+      <AccordionButton>
+        <Box flex="1" textAlign="left">
+          {file.name}
+        </Box>
+        <AccordionIcon />
+      </AccordionButton>
+      <AccordionPanel pb={4}>
+        {file.children?.map(renderChildren)}
+      </AccordionPanel>
+    </AccordionItem>
+  );
+};
+
+const SidebarItemFile = ({ file, handleNavigation }) => {
   return (
     <Box
       as="button"
       type="submit"
+      width="100%"
       px={4}
       py={2}
-      flex="1"
       textAlign="left"
       onClick={handleNavigation}
     >
@@ -32,26 +60,59 @@ const SidebarItem = ({ file }) => {
   );
 };
 
-export const Sidebar = (props: Props) => {
-  const filePath = path.join(__dirname, './content/');
-  const files: File[] = fs.readdirSync(filePath, 'utf8').map((filename) => {
+const SidebarItem = ({ file, folder = '' }) => {
+  const { setCurrentFile } = useCurrentFile();
+  const handleNavigation = () => {
+    if (setCurrentFile)
+      setCurrentFile((prevFile) => ({
+        ...prevFile,
+        name: `${folder}${file.name}`,
+      }));
+  };
+  if (file.type === 'dir') {
+    return <SidebarItemFolder file={file} folder={folder} />;
+  }
+  return <SidebarItemFile file={file} handleNavigation={handleNavigation} />;
+};
+
+const parseFolder = (folder = '', parentFolder = '') => {
+  const parseFile = (filename, prevFolder) => {
+    const filePathName = path.join(__dirname, `${prevFolder}/${filename}`);
     // Check if folder, recursively run this command and set as children
-    const children = [];
-    // if(fs.lstatSync(filename).isDirectory()) {
-    // children = runAgain
-    // }
+    let children = [];
+    if (fs.lstatSync(filePathName).isDirectory()) {
+      children = parseFolder(filename, prevFolder);
+      return {
+        name: filename,
+        type: 'dir',
+        children,
+      };
+    }
 
     // Check if MDX file
     if (path.extname(filename) === '.mdx') {
       // Create data object to render into a component
       return {
         name: filename,
-        children,
+        type: 'file',
       };
     }
-  });
+  };
+
+  const parentPath = parentFolder !== '' ? parentFolder : './content';
+  const combinedFolderPath = `${parentPath}/${folder}`;
+  const folderPath = path.join(__dirname, combinedFolderPath);
+  const files: File[] = fs
+    .readdirSync(folderPath, 'utf8')
+    .map((file) => parseFile(file, combinedFolderPath));
+  return files;
+};
+
+export const Sidebar = (props: Props) => {
+  const files: File[] = parseFolder();
+  console.log('files', files);
   return (
-    <Accordion display="flex" flexDirection="column">
+    <Accordion minHeight="100vh" allowMultiple allowToggle>
       {files.map((file) => (
         <SidebarItem key={file.name} file={file} />
       ))}
