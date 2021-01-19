@@ -1,7 +1,7 @@
+import { ColorModeScript } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
-import { MDXProvider } from '@mdx-js/react';
-import { UIComponents } from '../components/MDXProvider';
+import { Helmet } from 'react-helmet';
+import { ThemeProvider, theme } from '../components/ThemeProvider';
 
 type Props = {
   children: ReactNode;
@@ -9,5 +9,12 @@ type Props = {
 
 export default function App(props: Props) {
   const { children } = props;
-  return <ChakraProvider>{children}</ChakraProvider>;
+  return (
+    <ThemeProvider>
+      <Helmet>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      </Helmet>
+      {children}
+    </ThemeProvider>
+  );
 }

@@ -8,8 +8,29 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
+  IconButton,
+  useColorMode,
 } from '@chakra-ui/react';
 import { useCurrentFile } from '../context/CurrentFileContext';
+
+const DarkModeToggle = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  return (
+    <IconButton
+      onClick={toggleColorMode}
+      position="absolute"
+      bottom={3}
+      left={3}
+      borderRadius={999}
+      icon={
+        <Box width="17px" textAlign="center">
+          {colorMode === 'light' ? '⚫️' : '⚪️'}
+        </Box>
+      }
+    />
+  );
+};
 
 interface Props {}
 
@@ -112,10 +133,17 @@ export const Sidebar = (props: Props) => {
   const files: File[] = parseFolder();
   console.log('files', files);
   return (
-    <Accordion width="200px" minHeight="100vh" allowMultiple allowToggle>
+    <Accordion
+      width="200px"
+      minHeight="100vh"
+      position="relative"
+      allowMultiple
+      allowToggle
+    >
       {files.map((file) => (
         <SidebarItem key={file.name} file={file} />
       ))}
+      <DarkModeToggle />
     </Accordion>
   );
 };
