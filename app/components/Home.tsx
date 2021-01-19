@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import Test from '../content/test.mdx';
+import { useCurrentFileName } from '../context/CurrentFileContext';
 import CodeEditor from './CodeEditor';
+import { MDXPreview } from './MDXPreview';
 import PreviewErrorBoundary from './PreviewErrorBoundary';
+import { Sidebar } from './Sidebar';
 
 const Container = styled.section`
   display: flex;
@@ -18,18 +21,19 @@ const PreviewContainer = styled.div`
   padding: 3em;
 `;
 
-const timestamp = Number(new Date()).toString(36);
-
 export default function Home(): React.ReactNode {
+  const filename = useCurrentFileName();
+  const timestamp = Number(new Date()).toString(36);
   return (
     <Container>
+      <Sidebar />
       <ContentArea>
-        <CodeEditor />
+        <CodeEditor filename={filename} />
       </ContentArea>
       <ContentArea>
         <PreviewContainer>
           <PreviewErrorBoundary key={timestamp}>
-            <Test />
+            <MDXPreview filename={filename} />
           </PreviewErrorBoundary>
         </PreviewContainer>
       </ContentArea>
