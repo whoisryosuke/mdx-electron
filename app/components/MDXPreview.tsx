@@ -1,17 +1,16 @@
-import React, { Suspense } from 'react';
+import React from 'react';
+import fs from 'fs';
+import path from 'path';
+import MDX from '@mdx-js/runtime';
+import { UIComponents } from './MDXProvider';
 
 interface Props {}
 
 export const MDXPreview = ({ filename }: Props) => {
-  console.log('loading preview for', filename);
   if (filename && filename !== '') {
-    const MDXMagic = React.lazy(() => import(`../content/${filename}`));
-    console.log('the mdx preview', MDXMagic);
-    return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <MDXMagic />
-      </Suspense>
-    );
+    const filePath = path.join(__dirname, `./content/${filename}`);
+    const mdxText = fs.readFileSync(filePath, 'utf8');
+    return <MDX components={UIComponents}>{mdxText}</MDX>;
   }
   return <div>Select a file from the sidebar</div>;
 };

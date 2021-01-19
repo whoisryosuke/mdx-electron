@@ -9,9 +9,5 @@ type Props = {
 
 export default function App(props: Props) {
   const { children } = props;
-  return (
-    <ChakraProvider>
-      <MDXProvider components={UIComponents}>{children}</MDXProvider>
-    </ChakraProvider>
-  );
+  return <ChakraProvider>{children}</ChakraProvider>;
 }
