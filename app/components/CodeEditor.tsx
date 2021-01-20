@@ -5,6 +5,7 @@ import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { useColorMode } from '@chakra-ui/react';
 import { AccordionButton } from './CodeEditorButtons/AccordionButton';
 
 interface Props {
@@ -35,6 +36,7 @@ export const CodeEditor = React.memo(function CodeEditor({
   refreshPreview,
 }: Props) {
   const [code, setCode] = useState(EditorState.createEmpty());
+  const { colorMode, toggleColorMode } = useColorMode();
   const filePath = path.join(__dirname, `./content/${filename}`);
   const loadedFile = useRef('');
   const onChange = (newValue) => {
@@ -59,6 +61,20 @@ export const CodeEditor = React.memo(function CodeEditor({
       }
     }
   }, [filename, filePath]);
+
+  const editorStyles =
+    colorMode === 'dark'
+      ? {
+          fontColor: 'rgba(255, 255, 255, 0.92)',
+        }
+      : {};
+  const toolbarStyles =
+    colorMode === 'dark'
+      ? {
+          backgroundColor: '#1A202C',
+          borderColor: '#1A202C',
+        }
+      : {};
   return (
     <Editor
       editorState={code}
@@ -68,6 +84,8 @@ export const CodeEditor = React.memo(function CodeEditor({
       onEditorStateChange={onChange}
       toolbar={toolbarOptions}
       toolbarCustomButtons={[<AccordionButton key="accordion" />]}
+      editorStyle={editorStyles}
+      toolbarStyle={toolbarStyles}
     />
   );
 });
