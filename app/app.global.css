@@ -27,3 +27,21 @@ body {
 .DraftEditor-root h6 {
   font-size: 0.75em;
 }
+
+/**
+Dark mode support
+**/
+
+.chakra-ui-dark .rdw-block-dropdown {
+  background-color: rgb(144, 205, 244);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #000;
+}
+
+.chakra-ui-dark .rdw-block-dropdown:hover {
+  background-color: rgb(144, 205, 244);
+}
+.chakra-ui-dark .rdw-option-wrapper {
+  background-color: rgb(144, 205, 244);
+  border-color: rgba(255, 255, 255, 0.16);
+}
