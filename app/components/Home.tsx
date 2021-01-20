@@ -23,6 +23,8 @@ export default function Home(): React.ReactNode {
         height="100vh"
         overflowY="scroll"
         flexDirection="column"
+        borderRight="1px solid"
+        borderColor="inherit"
       >
         <CodeEditor filename={filename} refreshPreview={refreshPreview} />
       </Flex>

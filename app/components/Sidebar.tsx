@@ -139,6 +139,8 @@ export const Sidebar = (props: Props) => {
       position="relative"
       allowMultiple
       allowToggle
+      borderRight="1px solid"
+      borderColor="inherit"
     >
       {files.map((file) => (
         <SidebarItem key={file.name} file={file} />

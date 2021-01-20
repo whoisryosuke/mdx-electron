@@ -66,6 +66,7 @@ export const CodeEditor = React.memo(function CodeEditor({
     colorMode === 'dark'
       ? {
           fontColor: 'rgba(255, 255, 255, 0.92)',
+          padding: '0 2em',
         }
       : {};
   const toolbarStyles =
