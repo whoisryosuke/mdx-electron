@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import fs from 'fs';
 import path from 'path';
 import {
@@ -9,10 +9,46 @@ import {
   AccordionPanel,
   Box,
   Button,
+  Flex,
   IconButton,
   useColorMode,
 } from '@chakra-ui/react';
 import { useCurrentFile } from '../context/CurrentFileContext';
+
+const generateFilePath = (folder, attempt) => {
+  return path.join(__dirname, `./content/${folder}/new-${attempt}.mdx`);
+};
+
+const createFile = (folder = '') => {
+  console.log('creating new file', folder);
+  let filePath = path.join(__dirname, `./content/${folder}/new.mdx`);
+  let attempts = 1;
+  while (fs.existsSync(filePath)) {
+    filePath = generateFilePath(folder, attempts);
+    attempts += 1;
+  }
+  fs.writeFileSync(filePath, `# New Note`);
+};
+
+const CreateNewFile = ({ refreshSidebar }) => {
+  const handleCreateFile = () => {
+    createFile();
+    refreshSidebar();
+  };
+  return (
+    <Box
+      as="button"
+      type="button"
+      width="100%"
+      px={4}
+      py={2}
+      textAlign="left"
+      onClick={handleCreateFile}
+    >
+      ➕ New Note
+    </Box>
+  );
+};
 
 const DarkModeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -40,24 +76,37 @@ type File = {
   type: 'file' | 'dir';
 };
 
-const SidebarItemFolder = ({ file, folder }) => {
+const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
+  const handleCreateFile = () => {
+    console.log('folder', `${folder}${file.name}`);
+    createFile(`${folder}${file.name}`);
+    refreshSidebar();
+  };
   const renderChildren = (child) => {
     return (
       <SidebarItem
         key={child.name}
         file={child}
         folder={`${folder}${file.name}/`}
+        refreshSidebar={refreshSidebar}
       />
     );
   };
   return (
     <AccordionItem>
-      <AccordionButton>
+      <Flex px={4} py={2} alignContent="space-between">
         <Box flex="1" textAlign="left">
           {file.name}
         </Box>
-        <AccordionIcon />
-      </AccordionButton>
+        <Flex>
+          <Box as="button" onClick={handleCreateFile}>
+            ➕
+          </Box>
+          <AccordionButton width="auto" p={0}>
+            <AccordionIcon />
+          </AccordionButton>
+        </Flex>
+      </Flex>
       <AccordionPanel pr={0} pb={4}>
         {file.children?.map(renderChildren)}
       </AccordionPanel>
@@ -69,7 +118,7 @@ const SidebarItemFile = ({ file, handleNavigation }) => {
   return (
     <Box
       as="button"
-      type="submit"
+      type="button"
       width="100%"
       px={4}
       py={2}
@@ -81,7 +130,7 @@ const SidebarItemFile = ({ file, handleNavigation }) => {
   );
 };
 
-const SidebarItem = ({ file, folder = '' }) => {
+const SidebarItem = ({ file, folder = '', refreshSidebar }) => {
   const { setCurrentFile } = useCurrentFile();
   const handleNavigation = () => {
     if (setCurrentFile)
@@ -91,7 +140,13 @@ const SidebarItem = ({ file, folder = '' }) => {
       }));
   };
   if (file.type === 'dir') {
-    return <SidebarItemFolder file={file} folder={folder} />;
+    return (
+      <SidebarItemFolder
+        file={file}
+        folder={folder}
+        refreshSidebar={refreshSidebar}
+      />
+    );
   }
   return <SidebarItemFile file={file} handleNavigation={handleNavigation} />;
 };
@@ -130,7 +185,17 @@ const parseFolder = (folder = '', parentFolder = '') => {
 };
 
 export const Sidebar = (props: Props) => {
-  const files: File[] = parseFolder();
+  const [files, setFiles] = useState<File[] | never[]>([]);
+
+  const refreshSidebar = () => {
+    const newFiles: File[] = parseFolder();
+    setFiles(newFiles);
+  };
+
+  useEffect(() => {
+    refreshSidebar();
+  }, [setFiles]);
+
   console.log('files', files);
   return (
     <Accordion
@@ -143,8 +208,13 @@ export const Sidebar = (props: Props) => {
       borderColor="inherit"
     >
       {files.map((file) => (
-        <SidebarItem key={file.name} file={file} />
+        <SidebarItem
+          key={file.name}
+          file={file}
+          refreshSidebar={refreshSidebar}
+        />
       ))}
+      <CreateNewFile refreshSidebar={refreshSidebar} />
       <DarkModeToggle />
     </Accordion>
   );
