@@ -66,7 +66,6 @@ export const CodeEditor = React.memo(function CodeEditor({
     colorMode === 'dark'
       ? {
           fontColor: 'rgba(255, 255, 255, 0.92)',
-          padding: '0 2em',
         }
       : {};
   const toolbarStyles =
@@ -85,7 +84,15 @@ export const CodeEditor = React.memo(function CodeEditor({
       onEditorStateChange={onChange}
       toolbar={toolbarOptions}
       toolbarCustomButtons={[<AccordionButton key="accordion" />]}
-      editorStyle={editorStyles}
+      wrapperStyle={{
+        position: 'relative',
+        height: '100vh',
+      }}
+      editorStyle={{
+        overflow: 'none !important',
+        padding: '0 2em',
+        ...editorStyles,
+      }}
       toolbarStyle={toolbarStyles}
     />
   );
