@@ -15,7 +15,9 @@ export default function Home(): React.ReactNode {
   };
   return (
     <Flex minHeight="100vh">
-      <Sidebar />
+      <Box minHeight="100vh" height="100vh" height="100vh" overflowY="scroll">
+        <Sidebar />
+      </Box>
       <Flex
         as="section"
         flex={1}
