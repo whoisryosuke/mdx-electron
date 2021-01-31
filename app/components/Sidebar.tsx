@@ -11,12 +11,25 @@ import {
   Button,
   Flex,
   IconButton,
+  Input,
   useColorMode,
 } from '@chakra-ui/react';
 import { useCurrentFile } from '../context/CurrentFileContext';
+import useKeyPress from '../hooks/useKeyPress';
 
 const generateFilePath = (folder, attempt) => {
   return path.join(__dirname, `./content/${folder}/new-${attempt}.mdx`);
+};
+
+const renameFile = (oldName, folder, newName) => {
+  console.log('folder', `${folder}${oldName} to ${folder}${newName}`);
+  const oldPath = path.join(__dirname, `./content/${folder}${oldName}`);
+  const newPath = path.join(__dirname, `./content/${folder}${newName}`);
+  try {
+    fs.renameSync(oldPath, newPath);
+  } catch (error) {
+    console.warn(`Couldn't rename file`, error);
+  }
 };
 
 const createFile = (folder = '') => {
@@ -68,6 +81,31 @@ const DarkModeToggle = () => {
   );
 };
 
+const RenameInput = ({ name, folder, toggleRename, refreshSidebar }) => {
+  const [folderName, setFolderName] = useState(name);
+  const handleFolderName = (event) => setFolderName(event.target.value);
+  const { currentFile, setCurrentFile } = useCurrentFile();
+
+  const handleRename = () => {
+    renameFile(name, folder, folderName);
+    // Check if current file is renamed file
+    // If so, make sure to update current file
+    if (setCurrentFile && currentFile.name === `${folder}${name}`) {
+      setCurrentFile((prevFile) => ({
+        ...prevFile,
+        name: `${folder}${folderName}`,
+      }));
+    }
+    // Turn off input in sidebar
+    toggleRename();
+    // Force sidebar to refresh with new name
+    refreshSidebar();
+  };
+
+  useKeyPress('Enter', handleRename);
+  return <Input value={folderName} onChange={handleFolderName} />;
+};
+
 interface Props {}
 
 type File = {
@@ -77,6 +115,9 @@ type File = {
 };
 
 const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
+  const [rename, setRename] = useState(false);
+  const toggleRename = () => setRename((prevRename) => !prevRename);
+
   const handleCreateFile = () => {
     console.log('folder', `${folder}${file.name}`);
     createFile(`${folder}${file.name}`);
@@ -95,9 +136,18 @@ const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
   return (
     <AccordionItem>
       <Flex px={4} py={2} alignContent="space-between">
-        <Box flex="1" textAlign="left">
-          {file.name}
-        </Box>
+        {rename ? (
+          <RenameInput
+            name={file.name}
+            folder={folder}
+            toggleRename={toggleRename}
+            refreshSidebar={refreshSidebar}
+          />
+        ) : (
+          <Box flex="1" textAlign="left" onClick={toggleRename}>
+            {file.name}
+          </Box>
+        )}
         <Flex>
           <Box as="button" onClick={handleCreateFile}>
             ➕
@@ -114,7 +164,25 @@ const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
   );
 };
 
-const SidebarItemFile = ({ file, handleNavigation }) => {
+const SidebarItemFile = ({
+  file,
+  folder,
+  refreshSidebar,
+  handleNavigation,
+}) => {
+  const [rename, setRename] = useState(false);
+  const toggleRename = () => setRename((prevRename) => !prevRename);
+
+  if (rename) {
+    return (
+      <RenameInput
+        name={file.name}
+        folder={folder}
+        toggleRename={toggleRename}
+        refreshSidebar={refreshSidebar}
+      />
+    );
+  }
   return (
     <Box
       as="button"
@@ -123,9 +191,14 @@ const SidebarItemFile = ({ file, handleNavigation }) => {
       px={4}
       py={2}
       textAlign="left"
+      display="flex"
+      justifyContent="space-between"
       onClick={handleNavigation}
     >
       {file.name}
+      <Box as="button" onClick={toggleRename}>
+        ...
+      </Box>
     </Box>
   );
 };
@@ -148,7 +221,14 @@ const SidebarItem = ({ file, folder = '', refreshSidebar }) => {
       />
     );
   }
-  return <SidebarItemFile file={file} handleNavigation={handleNavigation} />;
+  return (
+    <SidebarItemFile
+      file={file}
+      folder={folder}
+      handleNavigation={handleNavigation}
+      refreshSidebar={refreshSidebar}
+    />
+  );
 };
 
 const parseFolder = (folder = '', parentFolder = '') => {
