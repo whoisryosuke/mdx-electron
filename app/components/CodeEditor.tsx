@@ -3,10 +3,20 @@ import fs from 'fs';
 import path from 'path';
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
+import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
+import createSideToolbarPlugin from '@draft-js-plugins/side-toolbar';
+// import { Editor } from 'react-draft-wysiwyg';
+import Editor from '@draft-js-plugins/editor';
+// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import '@draft-js-plugins/side-toolbar/lib/plugin.css';
 import { useColorMode } from '@chakra-ui/react';
 import { AccordionButton } from './CodeEditorButtons/AccordionButton';
+
+const markdownShortcutPlugin = createMarkdownShortcutsPlugin();
+const sideToolbarPlugin = createSideToolbarPlugin();
+const codeEditorPlugin = createSideToolbarPlugin();
+const plugins = [markdownShortcutPlugin, sideToolbarPlugin, codeEditorPlugin];
 
 interface Props {
   filename: string;
@@ -38,6 +48,7 @@ export const CodeEditor = React.memo(function CodeEditor({
   const [code, setCode] = useState(EditorState.createEmpty());
   const { colorMode, toggleColorMode } = useColorMode();
   const filePath = path.join(__dirname, `./content/${filename}`);
+  console.log('filePath', filePath);
   const loadedFile = useRef('');
   const onChange = (newValue) => {
     setCode(newValue);
@@ -78,22 +89,23 @@ export const CodeEditor = React.memo(function CodeEditor({
   return (
     <Editor
       editorState={code}
-      toolbarClassName="MDXCodeEditor_Toolbar"
-      wrapperClassName="MDXCodeEditor_Wrapper"
-      editorClassName="MDXCodeEditor"
-      onEditorStateChange={onChange}
-      toolbar={toolbarOptions}
-      toolbarCustomButtons={[<AccordionButton key="accordion" />]}
-      wrapperStyle={{
-        position: 'relative',
-        height: '100vh',
-      }}
-      editorStyle={{
-        overflow: 'none !important',
-        padding: '0 2em',
-        ...editorStyles,
-      }}
-      toolbarStyle={toolbarStyles}
+      onChange={onChange}
+      plugins={plugins}
+      // toolbarClassName="MDXCodeEditor_Toolbar"
+      // wrapperClassName="MDXCodeEditor_Wrapper"
+      // editorClassName="MDXCodeEditor"
+      // toolbar={toolbarOptions}
+      // toolbarCustomButtons={[<AccordionButton key="accordion" />]}
+      // wrapperStyle={{
+      //   position: 'relative',
+      //   height: '100vh',
+      // }}
+      // editorStyle={{
+      //   overflow: 'none !important',
+      //   padding: '0 2em',
+      //   ...editorStyles,
+      // }}
+      // toolbarStyle={toolbarStyles}
     />
   );
 });

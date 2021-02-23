@@ -283,6 +283,8 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.1.5",
+    "@draft-js-plugins/editor": "^4.1.0",
+    "@draft-js-plugins/side-toolbar": "^4.1.0",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
     "@fortawesome/fontawesome-free": "^5.15.0",
@@ -292,6 +294,8 @@
     "ace-builds": "^1.4.12",
     "connected-react-router": "^6.6.1",
     "draft-js": "^0.11.7",
+    "draft-js-code-editor-plugin": "^0.2.1",
+    "draft-js-markdown-shortcuts-plugin": "^0.6.1",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",

@@ -28,7 +28,10 @@ export default function Home(): React.ReactNode {
         borderRight="1px solid"
         borderColor="inherit"
       >
-        <CodeEditor filename={filename} refreshPreview={refreshPreview} />
+        <CodeEditor
+          filename={filename === '' ? 'new.mdx' : filename}
+          refreshPreview={refreshPreview}
+        />
       </Flex>
       <Box as="section" flex={1} minHeight="100vh">
         <Box p={3}>
