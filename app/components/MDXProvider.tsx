@@ -2,6 +2,8 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import {
+  Alert,
+  AlertIcon,
   Box,
   Flex,
   SimpleGrid,
@@ -119,7 +121,14 @@ export const UIComponents = {
   ul: (props) => <UnorderedList {...props} />,
   ol: (props) => <OrderedList {...props} />,
   li: (props) => <ListItem {...props} />,
-  pre: (props) => <Code {...props} />,
+  pre: (props) => <div {...props} />,
+  code: (props) => <Code {...props} />,
+  blockquote: ({ children, ...restProps }) => (
+    <Alert status="info" {...restProps}>
+      <AlertIcon />
+      {children}
+    </Alert>
+  ),
   // code: CodeBlock,
   ...ChakraUIComponents,
 };

@@ -61,11 +61,9 @@ export const CodeEditor = React.memo(function CodeEditor({
     }
   }, [filename, filePath]);
 
-  console.log('the code', code);
-
   return (
     <Editor
-      height="90vh"
+      height="100vh"
       defaultLanguage="markdown"
       language="markdown"
       theme="vs-dark"
@@ -75,6 +73,8 @@ export const CodeEditor = React.memo(function CodeEditor({
       beforeMount={handleEditorWillMount}
       options={{
         fontFamily: 'FiraCode',
+        fontSize: 14,
+        wordWrap: 'on',
       }}
     />
   );
