@@ -4,11 +4,23 @@
  */
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
+@font-face {
+  font-family: FiraCode;
+  src: url('./assets/fonts/FiraCode-Regular.ttf');
+}
+
+@font-face {
+  font-family: FiraCode;
+  src: url('./assets/fonts/FiraCode-Bold.ttf');
+  font-weight: bold;
+}
+
 body {
   position: relative;
   height: 100vh;
   overflow-y: hidden;
 }
+
 .DraftEditor-root h1 {
   font-size: 2em;
 }

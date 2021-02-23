@@ -43,8 +43,7 @@ export const CodeEditor = React.memo(function CodeEditor({
   };
 
   function handleEditorWillMount(monaco) {
-    // here is the monaco instance
-    // do something before editor is mounted
+    // Add themes
     monaco.editor.defineTheme('night-owl', nightOwl);
   }
 
@@ -68,11 +67,15 @@ export const CodeEditor = React.memo(function CodeEditor({
     <Editor
       height="90vh"
       defaultLanguage="markdown"
-      theme="night-owl"
+      language="markdown"
+      theme="vs-dark"
       value={code}
       line={0}
       onChange={onChange}
       beforeMount={handleEditorWillMount}
+      options={{
+        fontFamily: 'FiraCode',
+      }}
     />
   );
 });
