@@ -307,6 +307,7 @@
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-syntax-highlighter": "^15.4.3",
+    "react-table": "^7.6.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "regenerator-runtime": "^0.13.5",

@@ -58,6 +58,7 @@ import {
   Code,
   useColorMode,
 } from '@chakra-ui/react';
+import Database from './Database';
 
 const ChakraUIComponents = {
   Box,
@@ -146,6 +147,7 @@ export const UIComponents = {
       {children}
     </Alert>
   ),
+  Database,
   // code: CodeBlock,
   ...ChakraUIComponents,
 };

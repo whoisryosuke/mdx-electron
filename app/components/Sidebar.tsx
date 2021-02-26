@@ -115,7 +115,6 @@ type File = {
 const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
   const [rename, setRename] = useState(false);
   const toggleRename = () => setRename((prevRename) => !prevRename);
-
   const handleCreateFile = () => {
     createFile(`${folder}${file.name}`);
     refreshSidebar();
@@ -240,7 +239,7 @@ const parseFolder = (folder = '', parentFolder = '') => {
     const filePathName = path.join(__dirname, `${prevFolder}/${filename}`);
     // Check if folder, recursively run this command and set as children
     let children = [];
-    if (fs.lstatSync(filePathName).isDirectory()) {
+    if (fs.lstatSync(filePathName).isDirectory() && filename !== 'db') {
       children = parseFolder(filename, prevFolder);
       return {
         name: filename,
@@ -264,7 +263,10 @@ const parseFolder = (folder = '', parentFolder = '') => {
   const folderPath = path.join(__dirname, combinedFolderPath);
   const files: File[] = fs
     .readdirSync(folderPath, 'utf8')
-    .map((file) => parseFile(file, combinedFolderPath));
+    .map((file) => parseFile(file, combinedFolderPath))
+    .filter((el) => {
+      return el != null || el !== undefined;
+    });
   return files;
 };
 
