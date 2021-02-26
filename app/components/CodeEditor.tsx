@@ -32,7 +32,7 @@ export const CodeEditor = React.memo(function CodeEditor({
   refreshPreview,
 }: Props) {
   const [code, setCode] = useState('# Hello MDX!');
-  // const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
   const filePath = path.join(__dirname, `./content/${filename}`);
   const loadedFile = useRef('');
   const onChange = (newValue) => {
@@ -60,12 +60,14 @@ export const CodeEditor = React.memo(function CodeEditor({
     }
   }, [filename, filePath]);
 
+  const editorTheme = colorMode === 'light' ? 'vs' : 'vs-dark';
+
   return (
     <Editor
       height="100vh"
       defaultLanguage="markdown"
       language="markdown"
-      theme="vs-dark"
+      theme={editorTheme}
       value={code}
       line={0}
       onChange={onChange}
@@ -74,6 +76,9 @@ export const CodeEditor = React.memo(function CodeEditor({
         fontFamily: 'FiraCode',
         fontSize: 14,
         wordWrap: 'on',
+        minimap: {
+          enabled: false,
+        },
       }}
     />
   );

@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { darcula, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
   Alert,
   AlertIcon,
@@ -56,6 +56,7 @@ import {
   OrderedList,
   ListItem,
   Code,
+  useColorMode,
 } from '@chakra-ui/react';
 
 const ChakraUIComponents = {
@@ -124,18 +125,21 @@ export const UIComponents = {
   ol: (props) => <OrderedList mb={3} {...props} />,
   li: (props) => <ListItem mb={3} {...props} />,
   pre: (props) => <div {...props} />,
-  code: (props) => (
-    <SyntaxHighlighter
-      mb={3}
-      language={
-        props.className
-          ? props.className.replace('language-', '')
-          : 'javascript'
-      }
-      style={darcula}
-      {...props}
-    />
-  ),
+  code: (props) => {
+    const { colorMode } = useColorMode();
+    return (
+      <SyntaxHighlighter
+        mb={3}
+        language={
+          props.className
+            ? props.className.replace('language-', '')
+            : 'javascript'
+        }
+        style={colorMode === 'light' ? vs : darcula}
+        {...props}
+      />
+    );
+  },
   blockquote: ({ children, ...restProps }) => (
     <Alert status="info" mb={3} {...restProps}>
       <AlertIcon />

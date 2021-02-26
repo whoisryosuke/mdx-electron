@@ -277,6 +277,7 @@ export const Sidebar = (props: Props) => {
     <Accordion
       width="200px"
       minHeight="100vh"
+      pb={20}
       position="relative"
       allowMultiple
       allowToggle
