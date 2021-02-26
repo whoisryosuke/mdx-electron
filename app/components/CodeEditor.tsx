@@ -2,8 +2,43 @@ import React, { useEffect, useRef, useState } from 'react';
 import fs from 'fs';
 import path from 'path';
 import Editor, { loader } from '@monaco-editor/react';
-import { useColorMode } from '@chakra-ui/react';
+import { Box, Button, useColorMode } from '@chakra-ui/react';
 import nightOwl from 'monaco-themes/themes/Night Owl.json';
+
+const COMPONENT_TEMPLATE = {
+  accordion: `
+<Accordion allowToggle>
+  <AccordionItem>
+    <AccordionButton>
+      <Box flex="1" textAlign="left">
+        Section 1 title
+      </Box>
+      <AccordionIcon />
+    </AccordionButton>
+    <AccordionPanel pb={4}>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat.
+    </AccordionPanel>
+  </AccordionItem>
+</Accordion>`,
+  accordionItem: `
+<AccordionItem>
+  <AccordionButton>
+    <Box flex="1" textAlign="left">
+      Section 2 title
+    </Box>
+    <AccordionIcon />
+  </AccordionButton>
+  <AccordionPanel pb={4}>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    commodo consequat.
+  </AccordionPanel>
+</AccordionItem>`,
+};
 
 function ensureFirstBackSlash(str) {
   return str.length > 0 && str.charAt(0) !== '/' ? `/${str}` : str;
@@ -35,6 +70,7 @@ export const CodeEditor = React.memo(function CodeEditor({
   const { colorMode, toggleColorMode } = useColorMode();
   const filePath = path.join(__dirname, `./content/${filename}`);
   const loadedFile = useRef('');
+
   const onChange = (newValue) => {
     setCode(newValue);
     fs.writeFileSync(filePath, newValue);
@@ -60,27 +96,45 @@ export const CodeEditor = React.memo(function CodeEditor({
     }
   }, [filename, filePath]);
 
+  const addComponent = ({ currentTarget }) => {
+    const currentCode = code;
+    console.log('pressed', currentTarget.name);
+    const addedComponent = `${code}${COMPONENT_TEMPLATE[currentTarget.name]}`;
+    onChange(addedComponent);
+  };
+
   const editorTheme = colorMode === 'light' ? 'vs' : 'vs-dark';
 
   return (
-    <Editor
-      height="100vh"
-      defaultLanguage="markdown"
-      language="markdown"
-      theme={editorTheme}
-      value={code}
-      line={0}
-      onChange={onChange}
-      beforeMount={handleEditorWillMount}
-      options={{
-        fontFamily: 'FiraCode',
-        fontSize: 14,
-        wordWrap: 'on',
-        minimap: {
-          enabled: false,
-        },
-      }}
-    />
+    <>
+      <Box>
+        <Button name="accordion" onClick={addComponent}>
+          Accordion
+        </Button>
+        <Button name="accordionItem" onClick={addComponent}>
+          Accordion Item
+        </Button>
+      </Box>
+      <Editor
+        height="100vh"
+        paddingTop="150px"
+        defaultLanguage="markdown"
+        language="markdown"
+        theme={editorTheme}
+        value={code}
+        line={0}
+        onChange={onChange}
+        beforeMount={handleEditorWillMount}
+        options={{
+          fontFamily: 'FiraCode',
+          fontSize: 14,
+          wordWrap: 'on',
+          minimap: {
+            enabled: false,
+          },
+        }}
+      />
+    </>
   );
 });
 
