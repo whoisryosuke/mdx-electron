@@ -22,7 +22,6 @@ const generateFilePath = (folder, attempt) => {
 };
 
 const renameFile = (oldName, folder, newName) => {
-  console.log('folder', `${folder}${oldName} to ${folder}${newName}`);
   const oldPath = path.join(__dirname, `./content/${folder}${oldName}`);
   const newPath = path.join(__dirname, `./content/${folder}${newName}`);
   try {
@@ -33,7 +32,6 @@ const renameFile = (oldName, folder, newName) => {
 };
 
 const createFile = (folder = '') => {
-  console.log('creating new file', folder);
   let filePath = path.join(__dirname, `./content/${folder}/new.mdx`);
   let attempts = 1;
   while (fs.existsSync(filePath)) {
@@ -119,7 +117,6 @@ const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
   const toggleRename = () => setRename((prevRename) => !prevRename);
 
   const handleCreateFile = () => {
-    console.log('folder', `${folder}${file.name}`);
     createFile(`${folder}${file.name}`);
     refreshSidebar();
   };
@@ -276,7 +273,6 @@ export const Sidebar = (props: Props) => {
     refreshSidebar();
   }, [setFiles]);
 
-  console.log('files', files);
   return (
     <Accordion
       width="200px"

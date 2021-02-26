@@ -33,12 +33,10 @@ export default function Home(): React.ReactNode {
           refreshPreview={refreshPreview}
         />
       </Flex>
-      <Box as="section" flex={1} minHeight="100vh">
-        <Box p={3}>
-          <PreviewErrorBoundary key={refreshKey}>
-            <MDXPreview filename={filename} />
-          </PreviewErrorBoundary>
-        </Box>
+      <Box as="section" flex={1} maxHeight="100vh" p={3} overflow="auto">
+        <PreviewErrorBoundary key={refreshKey}>
+          <MDXPreview filename={filename} />
+        </PreviewErrorBoundary>
       </Box>
     </Flex>
   );

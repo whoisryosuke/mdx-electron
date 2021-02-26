@@ -21,7 +21,7 @@ export default class PreviewErrorBoundary extends React.Component<
     // Display fallback UI
     this.setState({ hasError: true });
     // eslint-disable-next-line no-console
-    // console.error(error, info);
+    console.error(error, info);
   }
 
   render() {

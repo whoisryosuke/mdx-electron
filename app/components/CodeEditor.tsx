@@ -34,7 +34,6 @@ export const CodeEditor = React.memo(function CodeEditor({
   const [code, setCode] = useState('# Hello MDX!');
   // const { colorMode, toggleColorMode } = useColorMode();
   const filePath = path.join(__dirname, `./content/${filename}`);
-  console.log('filePath', filePath);
   const loadedFile = useRef('');
   const onChange = (newValue) => {
     setCode(newValue);
