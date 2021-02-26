@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 export type CurrentFileStructure = {
   name: string;
+  icon: string;
 };
 
 export type CurrentFileContextStructure = {

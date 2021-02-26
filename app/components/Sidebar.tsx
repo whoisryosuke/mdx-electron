@@ -164,8 +164,10 @@ const SidebarItemFolder = ({ file, folder, refreshSidebar }) => {
 const SidebarItemFile = ({
   file,
   folder,
+  icon,
   refreshSidebar,
   handleNavigation,
+  selected,
 }) => {
   const [rename, setRename] = useState(false);
   const toggleRename = () => setRename((prevRename) => !prevRename);
@@ -189,9 +191,11 @@ const SidebarItemFile = ({
       py={2}
       textAlign="left"
       display="flex"
+      fontWeight={selected ? 'bold' : 'normal'}
       justifyContent="space-between"
       onClick={handleNavigation}
     >
+      {selected && icon}
       {file.name}
       <Box as="button" onClick={toggleRename}>
         ...
@@ -201,7 +205,7 @@ const SidebarItemFile = ({
 };
 
 const SidebarItem = ({ file, folder = '', refreshSidebar }) => {
-  const { setCurrentFile } = useCurrentFile();
+  const { currentFile, setCurrentFile } = useCurrentFile();
   const handleNavigation = () => {
     if (setCurrentFile)
       setCurrentFile((prevFile) => ({
@@ -218,12 +222,15 @@ const SidebarItem = ({ file, folder = '', refreshSidebar }) => {
       />
     );
   }
+  console.log('file icon', currentFile?.icon);
   return (
     <SidebarItemFile
       file={file}
       folder={folder}
       handleNavigation={handleNavigation}
       refreshSidebar={refreshSidebar}
+      icon={currentFile.icon}
+      selected={currentFile?.name === file.name}
     />
   );
 };

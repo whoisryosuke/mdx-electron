@@ -295,6 +295,7 @@
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "framer-motion": "^3.2.1",
+    "gray-matter": "^4.0.2",
     "history": "^4.7.2",
     "markdown-draft-js": "^2.2.1",
     "monaco-editor": "^0.22.3",
