@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import fs from 'fs';
 import path from 'path';
+import Monaco from 'monaco-editor';
 import Editor, { loader } from '@monaco-editor/react';
 import { useColorMode } from '@chakra-ui/react';
 import nightOwl from 'monaco-themes/themes/Night Owl.json';
@@ -35,13 +36,31 @@ export const CodeEditor = React.memo(function CodeEditor({
   const { colorMode, toggleColorMode } = useColorMode();
   const filePath = path.join(__dirname, `./content/${filename}`);
   const loadedFile = useRef('');
+  const editorRef = useRef(null);
   const onChange = (newValue) => {
     setCode(newValue);
     fs.writeFileSync(filePath, newValue);
     refreshPreview();
   };
 
-  function handleEditorWillMount(monaco) {
+  function handleEditorDidMount(editor, monaco) {
+    editorRef.current = editor;
+    // Add components
+    console.log('adding action');
+    editorRef.current.addAction({
+      id: 'component-accordion',
+      label: 'Accordion',
+      keybindings: [monaco.KeyMod.CtrlCmd, monaco.KeyCode.KEY_0],
+      contextMenuGroupId: 'navigation',
+      contextMenuOrder: 1.5,
+      run(ed) {
+        console.log('adding accordion');
+        return null;
+      },
+    });
+  }
+
+  function handleEditorWillMount(monaco: typeof Monaco) {
     // Add themes
     monaco.editor.defineTheme('night-owl', nightOwl);
   }
@@ -64,6 +83,7 @@ export const CodeEditor = React.memo(function CodeEditor({
 
   return (
     <Editor
+      ref={editorRef}
       height="100vh"
       defaultLanguage="markdown"
       language="markdown"
@@ -72,6 +92,7 @@ export const CodeEditor = React.memo(function CodeEditor({
       line={0}
       onChange={onChange}
       beforeMount={handleEditorWillMount}
+      onMount={handleEditorDidMount}
       options={{
         fontFamily: 'FiraCode',
         fontSize: 14,
